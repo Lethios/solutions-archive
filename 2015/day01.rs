@@ -1,6 +1,6 @@
 // https://adventofcode.com/2015/day/1
 
-fn main() {
+fn part1() {
     let input: &str = "<INPUT>";
     let mut floor: i32 = 0;
     
@@ -12,5 +12,5 @@ fn main() {
         }
     }
     
-    println!("Floor {floor}");
+    floor
 }
