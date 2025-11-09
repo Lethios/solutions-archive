@@ -1,3 +1,5 @@
+// https://adventofcode.com/2017/day/1
+
 fn part1(input: &str) -> u32 {
     let mut prev: u32 = input.chars().last().unwrap().to_digit(10).unwrap();
     let mut sum: u32 = 0;
