@@ -1,6 +1,5 @@
 use core::cmp;
-use std::io;
-use std::io::BufRead;
+use std::io::{self, BufRead};
 
 fn part1() -> u32 {
     let stdin = io::stdin();
