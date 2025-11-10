@@ -45,7 +45,7 @@ fn part2(input: &str) -> u32 {
 }
 
 fn main() {
-    let input: String = String::from("bgvyzdsv");
+    let input: String = String::from("<INPUT>");
 
     println!("Part 1: {}", part1(&input));
     println!("Part 2: {}", part2(&input));
