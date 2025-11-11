@@ -6,13 +6,13 @@ fn part1(input: &str) -> u32 {
     let mut light_grid: Vec<[bool; 1000]> = vec![[false; 1000]; 1000];
 
     for line in input.lines() {
-        let args: Vec<&str> = line.split(" ").collect();
+        let args: Vec<&str> = line.split_whitespace().collect();
 
-        let start_coords: Vec<u32> = args[if args[0] == "turn" { 2 } else { 1 }]
+        let start_coords: Vec<usize> = args[if args[0] == "turn" { 2 } else { 1 }]
             .split(",")
             .map(|num| num.parse().unwrap())
             .collect();
-        let end_coords: Vec<u32> = args[args.len() - 1]
+        let end_coords: Vec<usize> = args[args.len() - 1]
             .split(",")
             .map(|num| num.parse().unwrap())
             .collect();
@@ -21,15 +21,15 @@ fn part1(input: &str) -> u32 {
             "turn" => match args[1] {
                 "on" => {
                     for row in start_coords[0]..=end_coords[0] {
-                        for column in start_coords[1]..=end_coords[1] {
-                            light_grid[row as usize][column as usize] = true;
+                        for col in start_coords[1]..=end_coords[1] {
+                            light_grid[row][col] = true;
                         }
                     }
                 }
                 "off" => {
                     for row in start_coords[0]..=end_coords[0] {
-                        for column in start_coords[1]..=end_coords[1] {
-                            light_grid[row as usize][column as usize] = false;
+                        for col in start_coords[1]..=end_coords[1] {
+                            light_grid[row][col] = false;
                         }
                     }
                 }
@@ -37,13 +37,8 @@ fn part1(input: &str) -> u32 {
             },
             "toggle" => {
                 for row in start_coords[0]..=end_coords[0] {
-                    for column in start_coords[1]..=end_coords[1] {
-                        light_grid[row as usize][column as usize] =
-                            if light_grid[row as usize][column as usize] {
-                                false
-                            } else {
-                                true
-                            };
+                    for col in start_coords[1]..=end_coords[1] {
+                        light_grid[row][col] = !light_grid[row][col];
                     }
                 }
             }
@@ -53,8 +48,8 @@ fn part1(input: &str) -> u32 {
 
     let mut lit_count: u32 = 0;
     for row in 0..1000 {
-        for column in 0..1000 {
-            lit_count = if light_grid[row][column] {
+        for col in 0..1000 {
+            lit_count = if light_grid[row][col] {
                 lit_count + 1
             } else {
                 lit_count
@@ -69,13 +64,13 @@ fn part2(input: &str) -> i32 {
     let mut light_grid: Vec<[i32; 1000]> = vec![[0; 1000]; 1000];
 
     for line in input.lines() {
-        let args: Vec<&str> = line.split(" ").collect();
+        let args: Vec<&str> = line.split_whitespace().collect();
 
-        let start_coords: Vec<u32> = args[if args[0] == "turn" { 2 } else { 1 }]
+        let start_coords: Vec<usize> = args[if args[0] == "turn" { 2 } else { 1 }]
             .split(",")
             .map(|num| num.parse().unwrap())
             .collect();
-        let end_coords: Vec<u32> = args[args.len() - 1]
+        let end_coords: Vec<usize> = args[args.len() - 1]
             .split(",")
             .map(|num| num.parse().unwrap())
             .collect();
@@ -84,18 +79,15 @@ fn part2(input: &str) -> i32 {
             "turn" => match args[1] {
                 "on" => {
                     for row in start_coords[0]..=end_coords[0] {
-                        for column in start_coords[1]..=end_coords[1] {
-                            light_grid[row as usize][column as usize] += 1;
+                        for col in start_coords[1]..=end_coords[1] {
+                            light_grid[row][col] += 1;
                         }
                     }
                 }
                 "off" => {
                     for row in start_coords[0]..=end_coords[0] {
-                        for column in start_coords[1]..=end_coords[1] {
-                            if light_grid[row as usize][column as usize] > 0 {
-                                light_grid[row as usize][column as usize] -= 1;
-                            } else {
-                            }
+                        for col in start_coords[1]..=end_coords[1] {
+                            light_grid[row][col] = (light_grid[row][col] - 1).max(0);
                         }
                     }
                 }
@@ -103,8 +95,8 @@ fn part2(input: &str) -> i32 {
             },
             "toggle" => {
                 for row in start_coords[0]..=end_coords[0] {
-                    for column in start_coords[1]..=end_coords[1] {
-                        light_grid[row as usize][column as usize] += 2;
+                    for col in start_coords[1]..=end_coords[1] {
+                        light_grid[row][col] += 2;
                     }
                 }
             }
@@ -114,8 +106,8 @@ fn part2(input: &str) -> i32 {
 
     let mut lit_count: i32 = 0;
     for row in 0..1000 {
-        for column in 0..1000 {
-            lit_count += light_grid[row][column];
+        for col in 0..1000 {
+            lit_count += light_grid[row][col];
         }
     }
 
@@ -128,3 +120,4 @@ fn main() {
     println!("Part 1: {}", part1(&input));
     println!("Part 2: {}", part2(&input));
 }
+
