@@ -1,0 +1,31 @@
+name: Update AoC Badges
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Required to commit the changes back to README
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: J0B10/aoc-badges-action@v3.0.0
+        with:
+          userid: 5119609
+          session: ${{ secrets.AOC_SESSION }}
+          year: 2025
+
+          # --- CUSTOMIZATION SECTION ---
+          # Only uncomment these if you change the badge colors in your README
+          # starsRegex: '(?<=https:\/\/img\.shields\.io\/badge\/stars%20⭐-)[0-9]+(?=-purple)'
+          # dayRegex: '(?<=https:\/\/img\.shields\.io\/badge\/day%20📅-)[0-9]+(?=-blue)'
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update AoC badges
+          file_pattern: README.md
