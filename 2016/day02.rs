@@ -3,32 +3,33 @@
 use std::fs;
 
 fn part1(input: &str) -> String {
-    let mut ans: String = String::new();
-    let keypad: [[u8; 3]; 3] = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    let mut ans = String::with_capacity(input.lines().count());
 
-    let mut x: usize = 1;
-    let mut y: usize = 1;
+    let keypad = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
+
+    let mut row: usize = 1;
+    let mut col: usize = 1;
 
     for line in input.lines() {
         for direction in line.chars() {
             match direction {
-                'U' => x = if x == 0 { 0 } else { x - 1 },
-                'D' => x = if x == 2 { 2 } else { x + 1 },
-                'L' => y = if y == 0 { 0 } else { y - 1 },
-                'R' => y = if y == 2 { 2 } else { y + 1 },
+                'U' => row = row.saturating_sub(1),
+                'D' => row = (row + 1).min(2),
+                'L' => col = col.saturating_sub(1),
+                'R' => col = (col + 1).min(2),
                 _ => {}
             }
         }
-
-        ans = format!("{}{}", ans, keypad[x][y]);
+        ans.push(keypad[row][col]);
     }
 
     ans
 }
 
 fn part2(input: &str) -> String {
-    let mut ans: String = String::new();
-    let keypad: [[char; 7]; 7] = [
+    let mut ans = String::with_capacity(input.lines().count());
+
+    let keypad = [
         ['0', '0', '0', '0', '0', '0', '0'],
         ['0', '0', '0', '1', '0', '0', '0'],
         ['0', '0', '2', '3', '4', '0', '0'],
@@ -38,30 +39,45 @@ fn part2(input: &str) -> String {
         ['0', '0', '0', '0', '0', '0', '0'],
     ];
 
-    let mut x: usize = 3;
-    let mut y: usize = 1;
+    let mut row: usize = 3;
+    let mut col: usize = 1;
 
     for line in input.lines() {
         for direction in line.chars() {
             match direction {
-                'U' => x = if keypad[x - 1][y] == '0' { x } else { x - 1 },
-                'D' => x = if keypad[x + 1][y] == '0' { x } else { x + 1 },
-                'L' => y = if keypad[x][y - 1] == '0' { y } else { y - 1 },
-                'R' => y = if keypad[x][y + 1] == '0' { y } else { y + 1 },
+                'U' => {
+                    if keypad[row - 1][col] != '0' {
+                        row -= 1
+                    }
+                }
+                'D' => {
+                    if keypad[row + 1][col] != '0' {
+                        row += 1
+                    }
+                }
+                'L' => {
+                    if keypad[row][col - 1] != '0' {
+                        col -= 1
+                    }
+                }
+                'R' => {
+                    if keypad[row][col + 1] != '0' {
+                        col += 1
+                    }
+                }
                 _ => {}
             }
         }
-
-        ans = format!("{}{}", ans, keypad[x][y]);
+        ans.push(keypad[row][col]);
     }
 
     ans
 }
+
 fn main() {
-    let input: String = fs::read_to_string("input.txt").expect("Failed to read input file");
+    let input = fs::read_to_string("input.txt").expect("Failed to read input file");
 
     println!("Part 1: {}", part1(&input));
     println!("Part 2: {}", part2(&input));
 }
-
 
