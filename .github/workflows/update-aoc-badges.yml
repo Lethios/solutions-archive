@@ -20,7 +20,7 @@ jobs:
         with:
           userid: ${{ secrets.AOC_USER_ID }}
           session: ${{ secrets.AOC_SESSION }}
-          year: 2015
+          year: 2024
       
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
