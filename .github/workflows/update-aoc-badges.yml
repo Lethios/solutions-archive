@@ -1,7 +1,6 @@
 name: Update Advent of Code Badges
 
 on:
-  # Run manually when you want to update your stars
   workflow_dispatch:
     inputs:
       year:
@@ -37,16 +36,8 @@ jobs:
       
       - name: Update badges
         run: |
-          # Create input for aocr (simulating user input)
-          echo "${{ inputs.year }}" > input.txt
-          echo "${{ inputs.stars }}" >> input.txt
-          echo "" >> input.txt  # Empty line to finish
-          
-          # Run aocr with the input
-          aocr < input.txt
-          
-          # Clean up
-          rm input.txt
+          # Use printf with newlines to properly format input for aocr
+          printf "%s\n%s\n\n" "${{ inputs.year }}" "${{ inputs.stars }}" | aocr
       
       - name: Commit and push changes
         run: |
