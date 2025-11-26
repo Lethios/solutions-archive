@@ -18,4 +18,4 @@
 
 [![](https://img.shields.io/badge/2023-1%2F50-FBC901?style=for-the-badge&logo=adventofcode&logoColor=FBC901&logoSize=auto&labelColor=000000)](https://adventofcode.com/2023)
 
-[![](https://img.shields.io/badge/2024-2%2F50-FBC901?style=for-the-badge&logo=adventofcode&logoColor=FBC901&logoSize=auto&labelColor=000000)](https://adventofcode.com/2024)
+[![](https://img.shields.io/badge/2024-3%2F50-FBC901?style=for-the-badge&logo=adventofcode&logoColor=FBC901&logoSize=auto&labelColor=000000)](https://adventofcode.com/2024)
