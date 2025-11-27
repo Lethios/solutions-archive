@@ -7,17 +7,33 @@ fn part1(input: &str) -> u32 {
     let mut multiplication_sum: u32 = 0;
     let re: Regex = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
 
-    for line in input.lines() {
-        for caps in re.captures_iter(line) {
-            multiplication_sum += caps[1].parse::<u32>().unwrap() * caps[2].parse::<u32>().unwrap();
-        }
+    for caps in re.captures_iter(input) {
+        multiplication_sum += caps[1].parse::<u32>().unwrap() * caps[2].parse::<u32>().unwrap();
     }
 
     multiplication_sum
 }
 
 fn part2(input: &str) -> u32 {
-    0
+    let mut multiplication_sum: u32 = 0;
+    let re: Regex = Regex::new(r"mul\((\d+),(\d+)\)|do\(\)|don't\(\)").unwrap();
+
+    let mut enabled: bool = true;
+
+    for caps in re.captures_iter(input) {
+        match &caps[0] {
+            "do()" => enabled = true,
+            "don't()" => enabled = false,
+            _ => {
+                if enabled {
+                    multiplication_sum +=
+                        caps[1].parse::<u32>().unwrap() * caps[2].parse::<u32>().unwrap();
+                }
+            }
+        }
+    }
+
+    multiplication_sum
 }
 
 fn main() {
