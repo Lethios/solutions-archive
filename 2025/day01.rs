@@ -7,15 +7,14 @@ fn part1(input: &str) -> i32 {
     let mut dial: i32 = 50;
 
     for line in input.lines() {
-        let distance: i32 = line[1..line.len()]
-            .parse()
-            .expect("Failed to parse integer");
+        let (direction, distance) = line.split_at(1);
+        let distance: i32 = distance.parse().unwrap();
 
-        match line.as_bytes().get(0) {
-            Some(b'L') => {
+        match direction {
+            "L" => {
                 dial = (dial - distance).rem_euclid(100);
             }
-            Some(b'R') => {
+            "R" => {
                 dial = (dial + distance).rem_euclid(100);
             }
             _ => {}
@@ -34,16 +33,15 @@ fn part2(input: &str) -> i32 {
     let mut dial: i32 = 50;
 
     for line in input.lines() {
-        let distance: i32 = line[1..line.len()]
-            .parse()
-            .expect("Failed to parse integer");
+        let (direction, distance) = line.split_at(1);
+        let distance: i32 = distance.parse().unwrap();
 
-        match line.as_bytes().get(0) {
-            Some(b'L') => {
+        match direction {
+            "L" => {
                 zero_pointing += (100 - dial + distance) / 100 - (100 - dial) / 100;
                 dial = (dial - distance).rem_euclid(100);
             }
-            Some(b'R') => {
+            "R" => {
                 let new_position: i32 = dial + distance;
 
                 zero_pointing += new_position / 100;
