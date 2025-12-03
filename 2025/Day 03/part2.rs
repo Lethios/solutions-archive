@@ -10,7 +10,7 @@ fn part2(input: &str) -> u64 {
         let bank = bank.bytes();
         let digits: u32 = 12;
 
-        let mut joltage: String = String::new();
+        let mut joltage: u64 = 0;
         let mut prev_index: usize = 0;
 
         for digit in 0..digits {
@@ -27,9 +27,9 @@ fn part2(input: &str) -> u64 {
                 }
             }
             prev_index += 1;
-            joltage = format!("{}{}", joltage, max_battery - b'0');
+            joltage = joltage * 10 + (max_battery - b'0') as u64;
         }
-        max_joltage += joltage.parse::<u64>().unwrap();
+        max_joltage += joltage;
     }
 
     max_joltage
