@@ -22,20 +22,20 @@ fn part1(input: &str) -> u32 {
         (1, -1),
     ];
 
-    for (x, row) in grid.iter().enumerate() {
-        for (y, cell) in row.iter().enumerate() {
-            if *cell == '.' {
+    for row in 0..grid.len() {
+        for col in 0..grid[0].len() {
+            if grid[row][col] == '.' {
                 continue;
             }
 
             let mut neighbor_count = 0;
 
-            for (dx, dy) in adjacent_tiles {
-                let i = x as isize + dx;
-                let j = y as isize + dy;
+            for (d_row, d_col) in adjacent_tiles {
+                let x = row as isize + d_row;
+                let y = col as isize + d_col;
 
-                if i >= 0 && j >= 0 && (i as usize) < grid.len() && (j as usize) < row.len() {
-                    if grid[i as usize][j as usize] == '@' {
+                if x >= 0 && y >= 0 && (x as usize) < grid.len() && (y as usize) < grid[0].len() {
+                    if grid[x as usize][y as usize] == '@' {
                         neighbor_count += 1;
                     }
                 }
@@ -55,5 +55,4 @@ fn main() {
 
     println!("Part 1: {}", part1(&input));
 }
-
 
