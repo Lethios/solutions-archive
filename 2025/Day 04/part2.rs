@@ -35,9 +35,9 @@ fn part2(input: &str) -> u32 {
 
                 let mut neighbor_count = 0;
 
-                for (d_row, d_col) in adjacent_tiles {
-                    let x = row as isize + d_row;
-                    let y = col as isize + d_col;
+                for (dx, dy) in adjacent_tiles {
+                    let x = row as isize + dx;
+                    let y = col as isize + dy;
 
                     if x >= 0 && y >= 0 && (x as usize) < grid.len() && (y as usize) < grid[0].len()
                     {
