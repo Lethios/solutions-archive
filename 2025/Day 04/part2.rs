@@ -1,17 +1,31 @@
 // https://adventofcode.com/2025/day/4
 
+use std::collections::VecDeque;
 use std::fs;
 
 fn part2(input: &str) -> u32 {
     let mut accessible_rolls: u32 = 0;
-    let mut grid: Vec<Vec<char>> = Vec::new();
 
-    for line in input.lines() {
-        let row: Vec<char> = line.chars().collect();
-        grid.push(row);
+    let mut grid: Vec<Vec<char>> = Vec::with_capacity(input.lines().count());
+    let mut queue: VecDeque<(usize, usize)> = VecDeque::new();
+
+    for (row, line) in input.lines().enumerate() {
+        let mut grid_row: Vec<char> = Vec::new();
+
+        for (col, chr) in line.chars().enumerate() {
+            if chr == '@' {
+                queue.push_back((row, col));
+            }
+
+            grid_row.push(chr);
+        }
+        grid.push(grid_row);
     }
 
-    let adjacent_tiles: [(isize, isize); 8] = [
+    let rows: usize = grid.len();
+    let cols: usize = grid[0].len();
+
+    const ADJACENT_TILES: [(isize, isize); 8] = [
         (-1, 1),
         (0, 1),
         (1, 1),
@@ -22,36 +36,35 @@ fn part2(input: &str) -> u32 {
         (1, -1),
     ];
 
-    let mut removed_this_iteration: u32 = 10000;
+    while let Some((row, col)) = queue.pop_front() {
+        if grid[row][col] == '.' {
+            continue;
+        }
 
-    while removed_this_iteration > 0 {
-        removed_this_iteration = 0;
+        let mut neighbor_count: u32 = 0;
 
-        for row in 0..grid.len() {
-            for col in 0..grid[0].len() {
-                if grid[row][col] == '.' {
-                    continue;
+        for (dx, dy) in ADJACENT_TILES {
+            let x = row as isize + dx;
+            let y = col as isize + dy;
+
+            if x >= 0 && y >= 0 && (x as usize) < rows && (y as usize) < cols {
+                if grid[x as usize][y as usize] == '@' {
+                    neighbor_count += 1;
                 }
+            }
+        }
 
-                let mut neighbor_count = 0;
+        if neighbor_count < 4 {
+            accessible_rolls += 1;
+            grid[row][col] = '.';
 
-                for (dx, dy) in adjacent_tiles {
-                    let x = row as isize + dx;
-                    let y = col as isize + dy;
-
-                    if x >= 0 && y >= 0 && (x as usize) < grid.len() && (y as usize) < grid[0].len()
-                    {
-                        if grid[x as usize][y as usize] == '@' {
-                            neighbor_count += 1;
-                        }
+            for (dx, dy) in ADJACENT_TILES {
+                let x = row as isize + dx;
+                let y = col as isize + dy;
+                if x >= 0 && y >= 0 && (x as usize) < rows && (y as usize) < cols {
+                    if grid[x as usize][y as usize] == '@' {
+                        queue.push_back((x as usize, y as usize));
                     }
-                }
-
-                if neighbor_count < 4 {
-                    accessible_rolls += 1;
-                    removed_this_iteration += 1;
-
-                    grid[row][col] = '.';
                 }
             }
         }
@@ -65,5 +78,4 @@ fn main() {
 
     println!("Part 2: {}", part2(&input));
 }
-
 
