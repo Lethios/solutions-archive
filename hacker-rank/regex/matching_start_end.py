@@ -1,6 +1,6 @@
 # https://www.hackerrank.com/challenges/matching-start-end/problem
 
-Regex_Pattern = r"^\d\w{4}.$"	# Do not delete 'r'.
+Regex_Pattern = r"^\d\w{4}.$"
 
 import re
 
