@@ -1,55 +1,67 @@
-# https://leetcode.com/problems/sudoku-solver/
-
 class Solution:
     def solveSudoku(self, board: List[List[str]]) -> None:
         """
         Do not return anything, modify board in-place instead.
         """
 
-        rows = [set() for _ in range(9)]
-        cols = [set() for _ in range(9)]
-        grids = [set() for _ in range(9)]
+        rows = [0] * 9
+        cols = [0] * 9
+        grids = [0] * 9
 
-        empty_coords = []
+        empty_coords = set()
 
         for i in range(9):
             for j in range(9):
-                if board[i][j] == ".":
-                    empty_coords.append((i, j))
+                if board[i][j] != ".":
+                    val = int(board[i][j])
+
+                    rows[i] |= 1 << val
+                    cols[j] |= 1 << val
+                    grids[(i // 3) * 3 + (j // 3)] |= 1 << val
                 else:
-                    rows[i].add(board[i][j])
-                    cols[j].add(board[i][j])
+                    empty_coords.add((i, j))
+        
+        FULL = 0b1111111110
 
-                    grid_idx = (i // 3) * 3 + (j // 3)
-                    grids[grid_idx].add(board[i][j])
+        def valid(row, col):
+            return FULL & ~(rows[row] | cols[col] | grids[(row // 3) * 3 + (col // 3)])
 
-        def solve(idx):
-            if idx == len(empty_coords):
+        def solve():
+            if not empty_coords:
                 return True
 
-            row, col = empty_coords[idx]
-            valid_nums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"} - (
-                rows[row] | cols[col] | grids[(row // 3) * 3 + (col // 3)]
-            )
+            row, col = min(empty_coords, key=lambda coord: valid(coord[0], coord[1]).bit_count())
+            grid_idx = (row // 3) * 3 + (col // 3)
 
-            for num in valid_nums:
-                board[row][col] = num
+            valid_num = valid(row, col)
 
-                rows[row].add(num)
-                cols[col].add(num)
+            if not valid_num:
+                return False
+            
+            empty_coords.remove((row, col))
+            
+            while valid_num:
+                mask = valid_num & -valid_num
+                valid_num ^= mask
 
-                grid_idx = (row // 3) * 3 + (col // 3)
-                grids[grid_idx].add(num)
+                num = mask.bit_length() - 1
 
-                if not solve(idx + 1):
+                board[row][col] = str(num)
+
+                rows[row] |= mask
+                cols[col] |= mask
+                grids[grid_idx] |= mask
+
+                if not solve():
                     board[row][col] = "."
 
-                    rows[row].remove(num)
-                    cols[col].remove(num)
-                    grids[grid_idx].remove(num)
+                    rows[row] &= ~mask
+                    cols[col] &= ~mask
+                    grids[grid_idx] &= ~mask
                 else:
                     return True
 
+            empty_coords.add((row, col))
             return False
 
-        solve(0)
+        solve()
