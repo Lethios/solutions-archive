@@ -1,4 +1,4 @@
-# https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount/
+// https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount/
 
 impl Solution {
     pub fn minimum_cost(cost: Vec<i32>) -> i32 {
