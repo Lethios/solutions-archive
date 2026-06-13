@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 from pathlib import Path
 
 
@@ -11,13 +12,14 @@ class ParseError(Exception):
 
 
 def extract_url_comment(content: str) -> str:
-    first_line = content.splitlines()[0].strip() if content.splitlines() else ""
-    if first_line.startswith("//") and "adventofcode.com" in first_line:
+    lines = content.splitlines()
+    first_line = lines[0].strip() if lines else ""
+    if first_line.startswith("// https://adventofcode.com/"):
         return first_line
     raise ParseError("missing URL comment on first line")
 
 
-def extract_imports(content: str) -> str:
+def extract_imports(content: str) -> list[str]:
     first_fn_index = content.find("fn ")
     prelude = content if first_fn_index == -1 else content[:first_fn_index]
 
@@ -40,7 +42,7 @@ def extract_imports(content: str) -> str:
             blocks.append(block)
         i += 1
 
-    return "\n\n".join(blocks)
+    return blocks
 
 
 def find_matching_brace(source: str, open_brace_index: int) -> int:
@@ -112,7 +114,7 @@ def find_matching_brace(source: str, open_brace_index: int) -> int:
             i += 2
             continue
 
-        if ch == 'r':
+        if ch == "r":
             j = i + 1
             while j < len(source) and source[j] == "#":
                 j += 1
@@ -184,7 +186,19 @@ def process_directory(day_dir: Path, dry_run: bool = False) -> None:
     except ParseError:
         url_comment = extract_url_comment(part2_content)
 
-    imports = extract_imports(part1_content) or extract_imports(part2_content) or "use std::fs;"
+    imports_part1 = extract_imports(part1_content)
+    imports_part2 = extract_imports(part2_content)
+    import_blocks: list[str] = []
+
+    for block in imports_part1 + imports_part2:
+        if block not in import_blocks:
+            import_blocks.append(block)
+
+    imports = "\n\n".join(import_blocks)
+    if not imports:
+        imports = "use std::fs;"
+    elif not re.search(r"\bfs\b", imports):
+        imports = f"use std::fs;\n\n{imports}"
     part1_fn = extract_function(part1_content, "part1")
     part2_fn = extract_function(part2_content, "part2")
 
