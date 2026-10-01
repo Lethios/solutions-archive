@@ -2,26 +2,18 @@
 
 class Solution:
     def isValid(self, s: str) -> bool:
-        from collections import deque
+        stack = []
+        kv = {"(": ")", "[": "]", "{": "}"}
 
-        stack = deque()
-
-        valid = {
-            "{":"}",
-            "[":"]",
-            "(":")"
-        }  
-        for pointer in range(len(s)):
-            if s[pointer] in valid:
-                stack.append(s[pointer])
-            else:
-                if stack and valid[stack[-1]] == s[pointer]:                
-                    stack.pop()
-                    continue
-                else:
+        for char in s:
+            if char in kv:
+                stack.append(char)
+            elif stack:
+                if kv[stack[-1]] != char:
                     return False
 
-        if stack:
-            return False
-        else:
-            return True
+                stack.pop()
+            else:
+                return False
+
+        return len(stack) == 0
