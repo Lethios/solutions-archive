@@ -5,13 +5,9 @@ class Solution:
         res = []
 
         for i in range(m):
-            row = []
-            for j in range(n):
-                if i == 0 or j == n - 1:
-                    row.append(".")
-                else:
-                    row.append("#")
-
-            res.append("".join(row))
+            if i == 0:
+                res.append("." * n)
+            else:
+                res.append("#" * (n - 1) + ".")
 
         return res
